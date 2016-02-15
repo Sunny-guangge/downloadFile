@@ -186,11 +186,6 @@
     return _imageView;
 }
 
-- (void)downLoadFielByNSURLSession
-{
-//    NSURLSession
-}
-
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

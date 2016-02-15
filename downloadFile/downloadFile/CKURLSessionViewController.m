@@ -14,6 +14,14 @@
 
 @property (nonatomic,strong) UIProgressView *progressView;
 
+@property (nonatomic,strong) NSURLSession *session;
+
+@property (nonatomic,strong) NSData *resumData;
+
+@property (nonatomic,strong) NSURLSessionDownloadTask *sessionDownLoadTask;
+
+@property (nonatomic,strong) UILabel *label;
+
 @end
 
 @implementation CKURLSessionViewController
@@ -23,12 +31,14 @@
     self.view.backgroundColor = [UIColor whiteColor];
     [self.view addSubview:self.imageView];
     
+    [self.view addSubview:self.label];
     [self.view addSubview:self.progressView];
+    
+    UIBarButtonItem *rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemPlay target:self action:@selector(didClickPlayBarButtonItem)];
+    self.navigationItem.rightBarButtonItem = rightBarButtonItem;
     
     //NSURLSession异步下载图片
     [self downLoadImage];
-    
-    [self downLoadBigFile];
 }
 #pragma mark - NSURLSession异步下载图片
 - (void)downLoadImage
@@ -50,42 +60,76 @@
     [dataTask resume];
 }
 
-- (void)downLoadBigFile
+#pragma mark - 开始下载大文件
+- (void)didClickPlayBarButtonItem
 {
-    //block的下载大文件方法
-    NSURL *url = [NSURL URLWithString:@"http://7xi66y.com1.z0.glb.clouddn.com/winnovator_home%2Fwinnovator_media.mp4"];
+    if (self.sessionDownLoadTask == nil) {
+        
+        if (self.resumData) {
+            
+            [self goOnDownload];
+            
+        }
+        else
+        {
+            [self startDownLoad];
+        }
+        
+    }
+    else{
+        [self pause];
+    }
+}
 
-    NSURLSession *session = [NSURLSession sharedSession];
+//从0开始下载
+- (void)startDownLoad
+{
+    NSURL *url = [NSURL URLWithString:@"http://7xi66y.com1.z0.glb.clouddn.com/winnovator_home%2Fwinnovator_media.mp4"];
     
-    NSURLSessionDownloadTask *downLoadTask = [session downloadTaskWithURL:url completionHandler:^(NSURL * _Nullable location, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+    self.sessionDownLoadTask = [self.session downloadTaskWithURL:url];
+    
+    [self.sessionDownLoadTask resume];
+}
+
+
+//接着上一次下载的内容，继续下载
+- (void)goOnDownload
+{
+    
+    self.sessionDownLoadTask = [self.session downloadTaskWithResumeData:self.resumData];
+    
+    [self.sessionDownLoadTask resume];
+    
+    self.resumData = nil;
+    
+}
+
+//暂停下载
+- (void)pause
+{
+    __weak typeof(self) selfVC = self;
+    
+    [self.sessionDownLoadTask cancelByProducingResumeData:^(NSData * _Nullable resumeData) {
         
-        NSString *caches = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject];
-        // response.suggestedFilename ： 建议使用的文件名，一般跟服务器端的文件名一致
-        NSString *file = [caches stringByAppendingPathComponent:response.suggestedFilename];
-        
-        // 将临时文件剪切或者复制Caches文件夹
-        NSFileManager *mgr = [NSFileManager defaultManager];
-        
-        // AtPath : 剪切前的文件路径
-        // ToPath : 剪切后的文件路径
-        [mgr moveItemAtPath:location.path toPath:file error:nil];
-        
-        NSLog(@"%@",location);
+        selfVC.resumData = resumeData;
+        selfVC.sessionDownLoadTask = nil;
         
     }];
-    
-    [downLoadTask resume];
-    
-    
-//    //使用代理下载文件的方法
-//    NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
-//    
-//    NSURLSession *session = [NSURLSession sessionWithConfiguration:configuration delegate:self delegateQueue:[NSOperationQueue mainQueue]];
-//    
-//    NSURLSessionDownloadTask *downLoadTask = [session downloadTaskWithURL:url];
-//    
-//    [downLoadTask resume];
 }
+
+- (NSURLSession *)session
+{
+    if (_session == nil) {
+        
+        NSURLSessionConfiguration *mgc = [NSURLSessionConfiguration defaultSessionConfiguration];
+        
+        _session = [NSURLSession sessionWithConfiguration:mgc delegate:self delegateQueue:[NSOperationQueue mainQueue]];
+        
+    }
+    
+    return _session;
+}
+
 
 - (UIImageView *)imageView
 {
@@ -108,10 +152,26 @@
     return _progressView;
 }
 
+#pragma mark - NSURLSessionDownloadDelegate
+//下载完成之后的代理
 - (void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask
 didFinishDownloadingToURL:(NSURL *)location
 {
-    NSLog(@"%@%@",location,downloadTask.response.suggestedFilename);
+    NSString *caches = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) lastObject];
+    // response.suggestedFilename ： 建议使用的文件名，一般跟服务器端的文件名一致
+    NSString *file = [caches stringByAppendingPathComponent:downloadTask.response.suggestedFilename];
+    
+    NSLog(@"地址是：     %@",file);
+    
+    // 将临时文件剪切或者复制Caches文件夹
+    NSFileManager *mgr = [NSFileManager defaultManager];
+    
+    // AtPath : 剪切前的文件路径
+    // ToPath : 剪切后的文件路径
+    [mgr moveItemAtPath:location.path toPath:file error:nil];
+    
+    // 提示下载完成
+    [[[UIAlertView alloc] initWithTitle:@"下载完成" message:downloadTask.response.suggestedFilename delegate:self cancelButtonTitle:@"知道了" otherButtonTitles: nil] show];
 }
 
 /* Sent periodically to notify the delegate of download progress. */
@@ -120,9 +180,20 @@ didFinishDownloadingToURL:(NSURL *)location
  totalBytesWritten:(int64_t)totalBytesWritten
 totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite
 {
-    NSLog(@"%f",(double)totalBytesWritten / totalBytesExpectedToWrite);
-    
-    [_progressView setProgress:(double)totalBytesWritten / totalBytesExpectedToWrite animated:YES];
+    _progressView.progress = (double)totalBytesWritten/totalBytesExpectedToWrite;
+    self.label.text = [NSString stringWithFormat:@"下载进度:%f",(double)totalBytesWritten/totalBytesExpectedToWrite];
+}
+
+- (UILabel *)label
+{
+    if (_label == nil) {
+        
+        _label = [[UILabel alloc] initWithFrame:CGRectMake(0, self.view.frame.size.height - 100, self.view.frame.size.width, 40)];
+        _label.textAlignment = NSTextAlignmentCenter;
+        _label.textColor = [UIColor redColor];
+        
+    }
+    return _label;
 }
 
 /* Sent when a download has been resumed. If a download failed with an
