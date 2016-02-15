@@ -8,6 +8,7 @@
 
 #import "ViewController.h"
 #import "CKVideoViewController.h"
+#import "CKURLSessionViewController.h"
 
 @interface ViewController ()<NSURLConnectionDataDelegate>
 
@@ -59,6 +60,7 @@
     
     zhi = 0.0f;
     
+    //NSURLConnection 下载大文件
     [self asyDownloadBigFile];
     
     //设置控制暂停开始下载按钮
@@ -168,6 +170,10 @@
         
         isDownLoading = YES;
     }
+    
+    CKURLSessionViewController *urlSessionVC = [[CKURLSessionViewController alloc] init];
+    
+    [self.navigationController pushViewController:urlSessionVC animated:YES];
 }
 
 - (UIImageView *)imageView
@@ -179,6 +185,12 @@
     }
     return _imageView;
 }
+
+- (void)downLoadFielByNSURLSession
+{
+//    NSURLSession
+}
+
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

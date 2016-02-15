@@ -17,6 +17,7 @@
 		CE1FF32F1C5F3927009C0BAC /* downloadFileUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = CE1FF32E1C5F3927009C0BAC /* downloadFileUITests.m */; };
 		CE1FF33E1C5F48D9009C0BAC /* CKVideoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CE1FF33D1C5F48D9009C0BAC /* CKVideoViewController.m */; };
 		CE1FF3411C5F4C5E009C0BAC /* CKPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = CE1FF3401C5F4C5E009C0BAC /* CKPlayerView.m */; };
+		CECB24401C6087A000C06ABE /* CKURLSessionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CECB243F1C6087A000C06ABE /* CKURLSessionViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -57,6 +58,8 @@
 		CE1FF33D1C5F48D9009C0BAC /* CKVideoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKVideoViewController.m; sourceTree = "<group>"; };
 		CE1FF33F1C5F4C5E009C0BAC /* CKPlayerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKPlayerView.h; sourceTree = "<group>"; };
 		CE1FF3401C5F4C5E009C0BAC /* CKPlayerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKPlayerView.m; sourceTree = "<group>"; };
+		CECB243E1C6087A000C06ABE /* CKURLSessionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKURLSessionViewController.h; sourceTree = "<group>"; };
+		CECB243F1C6087A000C06ABE /* CKURLSessionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKURLSessionViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -111,6 +114,8 @@
 				CE1FF30D1C5F3927009C0BAC /* AppDelegate.m */,
 				CE1FF30F1C5F3927009C0BAC /* ViewController.h */,
 				CE1FF3101C5F3927009C0BAC /* ViewController.m */,
+				CECB243E1C6087A000C06ABE /* CKURLSessionViewController.h */,
+				CECB243F1C6087A000C06ABE /* CKURLSessionViewController.m */,
 				CE1FF33C1C5F48D9009C0BAC /* CKVideoViewController.h */,
 				CE1FF33D1C5F48D9009C0BAC /* CKVideoViewController.m */,
 				CE1FF33F1C5F4C5E009C0BAC /* CKPlayerView.h */,
@@ -285,6 +290,7 @@
 				CE1FF33E1C5F48D9009C0BAC /* CKVideoViewController.m in Sources */,
 				CE1FF3411C5F4C5E009C0BAC /* CKPlayerView.m in Sources */,
 				CE1FF30B1C5F3927009C0BAC /* main.m in Sources */,
+				CECB24401C6087A000C06ABE /* CKURLSessionViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
