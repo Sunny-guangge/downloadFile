@@ -10,44 +10,44 @@
 
 @interface CKPlayerView ()
 
-@property (nonatomic,strong) UILabel *label;
+//@property (nonatomic,strong) UILabel *label;
 
 @end
 
 @implementation CKPlayerView
 
-- (id)initWithFrame:(CGRect)frame
-{
-    self = [super initWithFrame:frame];
-    
-    if (self) {
-        
-        [self addSubview:self.label];
-        self.backgroundColor = [UIColor greenColor];
-        
-    }
-    
-    return self;
-}
-
-- (void)layoutSubviews
-{
-    [super layoutSubviews];
-    
-    _label.frame = CGRectMake(0, 0, 80, 20);
-}
-
-- (UILabel *)label
-{
-    if (_label == nil) {
-        
-        _label = [[UILabel alloc] init];
-        _label.text = @"success";
-        _label.textColor = [UIColor redColor];
-        
-    }
-    return _label;
-}
+//- (id)initWithFrame:(CGRect)frame
+//{
+//    self = [super initWithFrame:frame];
+//    
+//    if (self) {
+//        
+//        [self addSubview:self.label];
+//        self.backgroundColor = [UIColor greenColor];
+//        
+//    }
+//    
+//    return self;
+//}
+//
+//- (void)layoutSubviews
+//{
+//    [super layoutSubviews];
+//    
+//    _label.frame = CGRectMake(0, 0, 80, 20);
+//}
+//
+//- (UILabel *)label
+//{
+//    if (_label == nil) {
+//        
+//        _label = [[UILabel alloc] init];
+//        _label.text = @"success";
+//        _label.textColor = [UIColor redColor];
+//        
+//    }
+//    return _label;
+//}
 
 + (Class)layerClass {
     return [AVPlayerLayer class];

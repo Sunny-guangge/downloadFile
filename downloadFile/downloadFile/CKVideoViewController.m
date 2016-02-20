@@ -27,17 +27,8 @@
     self.view.backgroundColor = [UIColor whiteColor];
     
     [self.view addSubview:self.playerView];
-    
-    UIBarButtonItem *leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(didClickDoneBarButtonItem)];
-    self.navigationItem.leftBarButtonItem = leftBarButtonItem;
 }
 
-- (void)didClickDoneBarButtonItem
-{
-    MPMoviePlayerViewController *player = [[MPMoviePlayerViewController alloc] initWithContentURL:[NSURL URLWithString:@"http://7xi66y.com1.z0.glb.clouddn.com/winnovator_home%2Fwinnovator_media.mp4"]];
-    
-    [player presentViewController:self animated:YES completion:nil];
-}
 
 - (CKPlayerView *)playerView
 {
@@ -57,7 +48,7 @@
         
         _player = [[AVPlayer alloc] initWithPlayerItem:playerItem];
         
-        [_playerView setPlayer:_player];
+        [self.playerView setPlayer:_player];
         
     }
     return _player;
